@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Status Monitoring</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateStatus() {
+            $.getJSON("/status", function(data) {
+                var waterStatus = "";
+                var windStatus = "";
+
+                if (data.water < 5) {
+                    waterStatus = "Aman";
+                } else if (data.water >= 6 && data.water <= 8) {
+                    waterStatus = "Siaga";
+                } else {
+                    waterStatus = "Bahaya";
+                }
+
+                if (data.wind < 6) {
+                    windStatus = "Aman";
+                } else if (data.wind >= 7 && data.wind <= 15) {
+                    windStatus = "Siaga";
+                } else {
+                    windStatus = "Bahaya";
+                }
+
+                $("#water").text(data.water + " meter");
+                $("#wind").text(data.wind + " meter/detik");
+                $("#water-status").text(waterStatus);
+                $("#wind-status").text(windStatus);
+            });
+        }
+
+        $(document).ready(function() {
+            updateStatus();
+            setInterval(updateStatus, 15000);
+        });
+    </script>
+</head>
+<body>
+    <h1>Status Monitoring</h1>
+    <p>Water: <span id="water"></span> - Status: <span id="water-status"></span></p>
+    <p>Wind: <span id="wind"></span> - Status: <span id="wind-status"></span></p>
+</body>
+</html>
